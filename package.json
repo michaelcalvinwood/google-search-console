@@ -1,0 +1,15 @@
+{
+  "name": "google-search-console",
+  "version": "1.0.0",
+  "description": "",
+  "main": "getStats.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Michael Wood",
+  "license": "SEE LICENSE IN license.md",
+  "dependencies": {
+    "google-auth-library": "^8.7.0",
+    "googleapis": "^110.0.0"
+  }
+}
