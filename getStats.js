@@ -7,8 +7,7 @@ const keys = require('./clientSecret.json');
 const axios = require('axios');
 const { v4: uuidv4, v4 } = require('uuid');
 
-console.log(keys);
-
+//console.log(keys);
 
 // Search Console API
 
@@ -17,9 +16,9 @@ const request = {
     key: keys.private_key,
     scopes: ['https://www.googleapis.com/auth/webmasters','https://www.googleapis.com/auth/webmasters.readonly'],
   };
-console.log(request);
- const client = new JWT(request);
- google.options({auth: client});
+const client = new JWT(request);
+google.options({auth: client});
+
 // Check to see which properties are accessible with these credentials
 
 const searchConsoleQuery = async () => {
@@ -41,9 +40,10 @@ const searchConsoleQuery = async () => {
 
 
 // G3 Analytics Query
+// Parameters: https://developers.google.com/analytics/devguides/reporting/core/v3/reference
 // https://flaviocopes.com/google-analytics-api-nodejs/
 
-const analyticsQuery = async () => {
+const analyticsQueryG3 = async () => {
   const scopes = 'https://www.googleapis.com/auth/analytics.readonly'
   const jwt = new google.auth.JWT(process.env.CLIENT_EMAIL, null, process.env.PRIVATE_KEY, scopes);
   const viewId = '22567948';
@@ -66,7 +66,10 @@ const analyticsQuery = async () => {
 
 
 // G3 Measurement Protocol for Sending Events
+// Parameters: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
 // https://developers.google.com/analytics/devguides/collection/protocol/v1/
+// use /debug/collect for testing
+
 
 
 const sendPageViewG3 = async (url, title, propertyId = 'UA-11167465-10') => {
@@ -94,7 +97,7 @@ const sendPageViewG3 = async (url, title, propertyId = 'UA-11167465-10') => {
 }
 
 // G4 Analytics Query
-// Experiment with domains that I own
+// Develop with domains that I own
 
 // G4 Measurement Protocol for Sending Events
 // https://developers.google.com/analytics/devguides/collection/protocol/ga4
@@ -104,5 +107,5 @@ const sendPageViewG3 = async (url, title, propertyId = 'UA-11167465-10') => {
 // playground
 
 sendPageViewG3('https://dev.pymnts.com/today-on-pymnts/', 'Today on Pymnts', 'UA-11167465-10');
-//analyticsQuery();
+//analyticsQueryG3();
 
