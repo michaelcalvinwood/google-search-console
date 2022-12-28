@@ -2,7 +2,7 @@
   "name": "google-search-console",
   "version": "1.0.0",
   "description": "",
-  "main": "getStats.js",
+  "main": "googleStats.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

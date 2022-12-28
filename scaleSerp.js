@@ -35,6 +35,10 @@ async function getQuery(query, google_domain = "google.com", device = "desktop")
     }
 }
 
-let result = getQuery('digital transformation');
+
+/*
+    IMPORTANT: ADD LAST HOUR AS PARAMETER
+*/
+//let result = getQuery('digital transformation');
 
 
