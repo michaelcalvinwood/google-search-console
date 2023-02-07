@@ -64,13 +64,41 @@ const analyticsQueryG3 = async () => {
 
 }
 
+//https://ga-dev-tools.web.app/dimensions-metrics-explorer/
+
+/*
+  https://developers.google.com/analytics/devguides/reporting/core/v4/limits-quotas
+  If the quota of requesting a Google Analytics API is exceeded, the API returns an error code 403 or 429 and a message that the account has exceeded the quota. See the terms of service for more information.
+*/
+
+const getPageViewsG3 = async (startDate, endDate) => {
+  const scopes = 'https://www.googleapis.com/auth/analytics.readonly'
+  const jwt = new google.auth.JWT(process.env.CLIENT_EMAIL, null, process.env.PRIVATE_KEY, scopes);
+  const viewId = '22567948';
+  const response = await jwt.authorize()
+  const result = await google.analytics('v3').data.ga.get({
+    'auth': jwt,
+    'ids': 'ga:' + viewId,
+    'start-date': startDate,
+    'end-date': endDate,
+    'metrics': 'ga:users'
+  })
+
+  console.dir(result.data.rows[0][0]);
+
+  let test = JSON.stringify(result.data.rows, null, 4);
+
+  console.log(test);
+}
+
+getPageViewsG3('today', 'today');
+
+
 
 // G3 Measurement Protocol for Sending Events
 // Parameters: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
 // https://developers.google.com/analytics/devguides/collection/protocol/v1/
 // use /debug/collect for testing
-
-
 
 const sendPageViewG3 = async (url, title, propertyId = 'UA-11167465-10') => {
     const request = {
@@ -106,6 +134,6 @@ const sendPageViewG3 = async (url, title, propertyId = 'UA-11167465-10') => {
 
 // playground
 
-sendPageViewG3('https://dev.pymnts.com/today-on-pymnts/', 'Today on Pymnts', 'UA-11167465-10');
+//sendPageViewG3('https://dev.pymnts.com/today-on-pymnts/', 'Today on Pymnts', 'UA-11167465-10');
 //analyticsQueryG3();
 

@@ -27,4 +27,4 @@ async function relatedKeywords (keyword) {
     console.log(JSON.stringify(response.data, null, 4));
 }
 
-relatedKeywords('digital transformation');
+relatedKeywords('FTX');
