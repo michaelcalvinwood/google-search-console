@@ -64,12 +64,19 @@ const analyticsQueryG3 = async () => {
 
 }
 
+// Sample CSV Template: https://support.google.com/analytics/answer/10325025?hl=en#template
+
+
 //https://ga-dev-tools.web.app/dimensions-metrics-explorer/
 
 /*
   https://developers.google.com/analytics/devguides/reporting/core/v4/limits-quotas
   If the quota of requesting a Google Analytics API is exceeded, the API returns an error code 403 or 429 and a message that the account has exceeded the quota. See the terms of service for more information.
 */
+
+
+// get page info page_info
+// get user info user_info
 
 const getPageViewsG3 = async (startDate, endDate) => {
   const scopes = 'https://www.googleapis.com/auth/analytics.readonly'
@@ -81,8 +88,11 @@ const getPageViewsG3 = async (startDate, endDate) => {
     'ids': 'ga:' + viewId,
     'start-date': startDate,
     'end-date': endDate,
-    'metrics': 'ga:users'
+    'dimensions': "ga:pagePath,ga:deviceCategory,ga:continent,ga:subContinent,ga:country,ga:region",
+    'metrics': 'ga:pageviews, ga:uniquePageviews, ga:entrances'
   })
+
+
 
   console.dir(result.data.rows[0][0]);
 
@@ -92,8 +102,6 @@ const getPageViewsG3 = async (startDate, endDate) => {
 }
 
 getPageViewsG3('today', 'today');
-
-
 
 // G3 Measurement Protocol for Sending Events
 // Parameters: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
