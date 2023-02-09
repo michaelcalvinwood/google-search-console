@@ -88,20 +88,24 @@ const getPageViewsG3 = async (startDate, endDate) => {
     'ids': 'ga:' + viewId,
     'start-date': startDate,
     'end-date': endDate,
+    'start-index': 110130,
+    'max-results': 10000,
     'dimensions': "ga:pagePath,ga:deviceCategory,ga:continent,ga:subContinent,ga:country,ga:region",
     'metrics': 'ga:pageviews, ga:uniquePageviews, ga:entrances'
   })
 
 
 
-  console.dir(result.data.rows[0][0]);
+  //console.dir(result.data.rows[0][0]);
 
-  let test = JSON.stringify(result.data.rows, null, 4);
+  let test = JSON.stringify(result.data);
 
   console.log(test);
 }
 
-getPageViewsG3('today', 'today');
+//getPageViewsG3('today', 'today');
+
+getPageViewsG3('2023-02-06', '2023-02-08');
 
 // G3 Measurement Protocol for Sending Events
 // Parameters: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
