@@ -6,6 +6,7 @@ const searchconsole = google.searchconsole('v1');
 const keys = require('./clientSecret.json');
 const axios = require('axios');
 const { v4: uuidv4, v4 } = require('uuid');
+const { DateTime } = require("luxon");
 
 //console.log(keys);
 
@@ -148,6 +149,15 @@ const sendPageViewG3 = async (url, title, propertyId = 'UA-11167465-10') => {
     })
 }
 
+const cycleThroughDays = async (first, last) => {
+  let curDate = null;
+  while (curDate !== last) {
+    if (curDate === null) curDate = first;
+    else curDate = DateTime.fromISO(curDate).plus({days: 1}).toISODate();
+    console.log(curDate);
+  }
+}
+
 // G4 Analytics Query
 // Develop with domains that I own
 
@@ -159,5 +169,6 @@ const sendPageViewG3 = async (url, title, propertyId = 'UA-11167465-10') => {
 // playground
 
 //sendPageViewG3('https://dev.pymnts.com/today-on-pymnts/', 'Today on Pymnts', 'UA-11167465-10');
-analyticsQueryG3('2023-03-01', 'today');
+//analyticsQueryG3('2023-03-01', 'today');
 
+cycleThroughDays ('2021-02-01', '2021-03-03');
