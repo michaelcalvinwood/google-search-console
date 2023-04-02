@@ -43,7 +43,7 @@ const searchConsoleQuery = async () => {
 // Parameters: https://developers.google.com/analytics/devguides/reporting/core/v3/reference
 // https://flaviocopes.com/google-analytics-api-nodejs/
 
-const analyticsQueryG3 = async () => {
+const analyticsQueryG3 = async (startDate, endDate) => {
   const scopes = 'https://www.googleapis.com/auth/analytics.readonly'
   const jwt = new google.auth.JWT(process.env.CLIENT_EMAIL, null, process.env.PRIVATE_KEY, scopes);
   const viewId = '22567948';
@@ -51,14 +51,14 @@ const analyticsQueryG3 = async () => {
   const result = await google.analytics('v3').data.ga.get({
     'auth': jwt,
     'ids': 'ga:' + viewId,
-    'start-date': '30daysAgo',
-    'end-date': 'today',
-    'metrics': 'ga:pageviews'
+    'start-date': startDate,
+    'end-date': endDate,
+    'metrics': 'ga:pageviews, ga:uniquePageViews, ga:visitors'
   })
 
-  console.dir(result.data.rows[0][0]);
+  //console.dir(result.data.rows[0][0]);
 
-  let test = JSON.stringify(result.data.rows, null, 4);
+  let test = JSON.stringify(result.data, null, 4);
 
   console.log(test);
 
@@ -78,34 +78,46 @@ const analyticsQueryG3 = async () => {
 // get page info page_info
 // get user info user_info
 
-const getPageViewsG3 = async (startDate, endDate) => {
+
+// add sorting!!
+const getPageInfoG3 = async (startDate, endDate) => {
   const scopes = 'https://www.googleapis.com/auth/analytics.readonly'
   const jwt = new google.auth.JWT(process.env.CLIENT_EMAIL, null, process.env.PRIVATE_KEY, scopes);
   const viewId = '22567948';
   const response = await jwt.authorize()
-  const result = await google.analytics('v3').data.ga.get({
-    'auth': jwt,
-    'ids': 'ga:' + viewId,
-    'start-date': startDate,
-    'end-date': endDate,
-    'start-index': 110130,
-    'max-results': 10000,
-    'dimensions': "ga:pagePath,ga:deviceCategory,ga:continent,ga:subContinent,ga:country,ga:region",
-    'metrics': 'ga:pageviews, ga:uniquePageviews, ga:entrances'
-  })
+  let startIndex = 1;
+  let totalResults = 2;
+  while (startIndex < totalResults) {
+    let result = await google.analytics('v3').data.ga.get({
+      'auth': jwt,
+      'ids': 'ga:' + viewId,
+      'start-date': startDate,
+      'end-date': endDate,
+      'start-index': startIndex,
+      'max-results': 10000,
+      'dimensions': "ga:pagePath,ga:deviceCategory,ga:continent,ga:subContinent,ga:country,ga:region",
+      'metrics': 'ga:pageviews, ga:uniquePageviews'
+    })
+
+    console.log('total results', result.data.totalResults);
+    
+    break; // for debug purposes
+  }
+  
+
 
 
 
   //console.dir(result.data.rows[0][0]);
 
-  let test = JSON.stringify(result.data);
+  //let test = JSON.stringify(result.data);
 
-  console.log(test);
+  //console.log(test);
 }
 
 //getPageViewsG3('today', 'today');
 
-getPageViewsG3('2023-02-06', '2023-02-08');
+//getPageInfoG3('2023-02-06', '2023-02-08');
 
 // G3 Measurement Protocol for Sending Events
 // Parameters: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
@@ -147,5 +159,5 @@ const sendPageViewG3 = async (url, title, propertyId = 'UA-11167465-10') => {
 // playground
 
 //sendPageViewG3('https://dev.pymnts.com/today-on-pymnts/', 'Today on Pymnts', 'UA-11167465-10');
-//analyticsQueryG3();
+analyticsQueryG3('2023-03-01', 'today');
 
