@@ -310,18 +310,38 @@ const cycleThroughQuarters = async (startQuarter, lastQuarter) => {
       }
     }
 
-    console.log('cur', curYear, curQuarter)
-    const dates = getDatesInQuarter(curQuarter, curYear);
-    for (let i = 0; i < dates.length; ++i) {
-      let stats = await getStatsForGivenDay(dates[i]);
-      console.log('stats', dates[i], stats);
+    let multiplier;
+
+    switch (curYear) {
+      case 2019:
+        multiplier = 1.24;
+        break;
+      case 2020:
+        multiplier = 1.255;
+        break;
+      case 2021:
+        multiplier = 1.275;
+        break;
+      case 2022:
+        multiplier = 1.29;
+        break;
+      case 2023:
+        multiplier = 1.31;
+        break;
     }
+
+    console.log('cur', curYear, curQuarter, multiplier)
+    // const dates = getDatesInQuarter(curQuarter, curYear);
+    // for (let i = 0; i < dates.length; ++i) {
+    //   let stats = await getStatsForGivenDay(dates[i]);
+    //   console.log('stats', dates[i], stats);
+    // }
   }
 
   
 }
 
-cycleThroughQuarters('Q1-2019', 'Q1-2019');
+cycleThroughQuarters('Q1-2019', 'Q1-2023');
 
 
 
