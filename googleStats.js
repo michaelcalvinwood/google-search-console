@@ -33,6 +33,8 @@ const pool = mysql.createPool({
     debug    :  false
 });
 
+let databaseReady = false;
+
 pool.query("SHOW DATABASES",(err, data) => {
     if(err) {
         console.error(err);
@@ -40,7 +42,31 @@ pool.query("SHOW DATABASES",(err, data) => {
     }
     // rows fetch
     console.log(data);
+    databaseReady = true;
 });
+
+const mysqlQuery = query => {
+  return new Promise ((resolve, reject) => {
+    pool.query(query,(err, data) => {
+      if(err) {
+          console.error(err);
+          return reject(err);
+      }
+      // rows fetch
+      //console.log(data);
+      return resolve(data);
+  });
+  })
+}
+
+
+const insertG3Stats = async (info) => {
+  const { date, pageViews, uniquePageViews, visitors } = info;
+  const query = `INSERT INTO g3_stats (date, page_views, unique_page_views, visitors) VALUES ('${date}', ${pageViews}, ${uniquePageViews}, ${visitors})`;
+  const result = await mysqlQuery(query);
+  //console.log('query result', result);
+  return result;
+}
 
 // Check to see which properties are accessible with these credentials
 
@@ -178,18 +204,66 @@ const cycleThroughDays = async (first, last) => {
   let result;
   const info = {}
 
-  while (curDate !== last) {
-    if (curDate === null) curDate = first;
-    else curDate = DateTime.fromISO(curDate).plus({days: 1}).toISODate();
-
-    result = await analyticsQueryG3(curDate, curDate);
-    info.pageViews = result[0];
-    info.uniquePageViews = result[1];
-    info.visitors = result[2];
-
-    console.log(curDate, info);
+  try {
+    while (curDate !== last) {
+      if (curDate === null) curDate = first;
+      else curDate = DateTime.fromISO(curDate).plus({days: 1}).toISODate();
+  
+      result = await analyticsQueryG3(curDate, curDate);
+      info.date = curDate;
+      info.pageViews = result[0];
+      info.uniquePageViews = result[1];
+      info.visitors = result[2];
+  
+      await insertG3Stats(info);
+  
+      console.log(curDate);
+    }
+  } catch (e) {
+    console.error(e);
   }
 }
+
+/*
+ * Example quarter: 'Q1-2019'
+ */
+const cycleThroughQuarters = (startQuarter, lastQuarter) => {
+  let curQuarter = null;
+  let curYear = null;
+  let finalQuarter = lastQuarter.split('-')[0];
+  let finalYear = Number(lastQuarter.split('-')[1]);
+
+  console.log('final', finalYear, finalQuarter)
+
+  while (curYear !== finalYear || curQuarter !== finalQuarter) {
+    if (curQuarter === null) {
+      curQuarter = startQuarter.split('-')[0];
+      curYear = Number(startQuarter.split('-')[1]);
+    } else {
+      switch (curQuarter) {
+        case 'Q1':
+          curQuarter = 'Q2';
+          break;
+        case 'Q2':
+          curQuarter = 'Q3';
+          break;
+        case 'Q3':
+          curQuarter = 'Q4';
+          break;
+        case 'Q4':
+          curQuarter = 'Q1';
+          ++curYear;
+          break;
+      }
+    }
+
+    console.log('cur', curYear, curQuarter)
+  }
+  
+}
+
+cycleThroughQuarters('Q1-2019', 'Q1-2023');
+
 
 // G4 Analytics Query
 // Develop with domains that I own
@@ -204,4 +278,15 @@ const cycleThroughDays = async (first, last) => {
 //sendPageViewG3('https://dev.pymnts.com/today-on-pymnts/', 'Today on Pymnts', 'UA-11167465-10');
 //analyticsQueryG3('2023-03-01', 'today');
 
-//cycleThroughDays ('2019-01-01', '2019-01-07');
+//
+
+const test = {
+  date: '2015-01-01',
+  pageViews: 100000,
+  uniquePageViews: 50000,
+  visitors: 25000
+}
+
+// setTimeout(() => {
+//   cycleThroughDays ('2023-01-01', '2023-04-01');
+// }, 2000) 
