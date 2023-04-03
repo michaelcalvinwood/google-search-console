@@ -11,6 +11,8 @@ const { DateTime } = require("luxon");
 const { convertArrayToCSV } = require('convert-array-to-csv');
 const converter = require('convert-array-to-csv');
 
+const fs = require('fs');
+
 //console.log(keys);
 
 // Search Console API
@@ -362,6 +364,13 @@ const cycleThroughQuarters = async (startQuarter, lastQuarter) => {
   console.log('quarterlyInfo', quaterlyInfo);
 
   const csv = convertArrayToCSV(quaterlyInfo);
+
+  fs.writeFile('pymntsQuarterlyStats.csv', csv, (err) => {
+          
+    // In case of a error throw err.
+    if (err) return console.error(err);
+    console.log('csv file created');
+})
   
   console.log('csv', csv);
 }
