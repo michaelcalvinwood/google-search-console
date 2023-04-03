@@ -349,6 +349,10 @@ const cycleThroughQuarters = async (startQuarter, lastQuarter) => {
       visitors += stats.visitors;
     }
 
+    pageViews = Math.trunc(pageViews * multiplier);
+    uniquePageViews = Math.trunc(uniquePageViews * multiplier);
+    visitors = Math.trunc(visitors * multiplier);
+
     quaterlyInfo.push([curYear, curQuarter, pageViews, uniquePageViews, visitors])
   }
 
