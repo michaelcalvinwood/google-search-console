@@ -349,14 +349,21 @@ const cycleThroughQuarters = async (startQuarter, lastQuarter) => {
 
     for (let i = 0; i < dates.length; ++i) {
       let stats = await getStatsForGivenDay(dates[i]);
-      pageViews += stats.pageViews;
-      uniquePageViews += stats.uniquePageViews;
-      visitors += stats.visitors;
+      
+      if (curYear === 2023 && stats.visitors > 25000) {
+        pageViews += stats.pageViews;
+        uniquePageViews += stats.uniquePageViews;
+        visitors += stats.visitors;
+      } else {
+        pageViews += stats.pageViews * multiplier;
+        uniquePageViews += stats.uniquePageViews * multiplier;
+        visitors += stats.visitors * multiplier;
+      }
     }
 
-    pageViews = Math.trunc(pageViews * multiplier);
-    uniquePageViews = Math.trunc(uniquePageViews * multiplier);
-    visitors = Math.trunc(visitors * multiplier);
+    pageViews = Math.round(pageViews);
+    uniquePageViews = Math.round(uniquePageViews);
+    visitors = Math.round(visitors);
 
     quaterlyInfo.push([curYear, curQuarter, pageViews, uniquePageViews, visitors])
   }
