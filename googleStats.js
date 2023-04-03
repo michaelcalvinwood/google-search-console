@@ -224,6 +224,17 @@ const cycleThroughDays = async (first, last) => {
   }
 }
 
+const getEveryDayBetweenTwoDates = (firstDate, lastDate) => {
+  const dates = [];
+  let curDate = firstDate;
+  dates.push(firstDate);
+  while (curDate !== lastDate) {
+    curDate = DateTime.fromISO(curDate).plus({days: 1}).toISODate();
+    dates.push(curDate);
+  }
+  return dates;
+}
+
 const getDatesInQuarter = (quarter, year) => {
   let startDate, endDate;
 
@@ -247,6 +258,9 @@ const getDatesInQuarter = (quarter, year) => {
   }
 
   console.log('start/stop', startDate, endDate);
+  const dates = getEveryDayBetweenTwoDates(startDate, endDate);
+  console.log(dates);
+  
 }
 
 /*
