@@ -288,6 +288,11 @@ const cycleThroughQuarters = async (startQuarter, lastQuarter) => {
 
   console.log('final', finalYear, finalQuarter)
 
+  const quaterlyInfo = [];
+  quaterlyInfo.push(['Year', 'Quarter', 'Page Views', 'Unique Page Views', 'Visitors']);
+
+  let pageViews, uniquePageViews, visitors;
+
   while (curYear !== finalYear || curQuarter !== finalQuarter) {
     if (curQuarter === null) {
       curQuarter = startQuarter.split('-')[0];
@@ -331,17 +336,27 @@ const cycleThroughQuarters = async (startQuarter, lastQuarter) => {
     }
 
     console.log('cur', curYear, curQuarter, multiplier)
-    // const dates = getDatesInQuarter(curQuarter, curYear);
-    // for (let i = 0; i < dates.length; ++i) {
-    //   let stats = await getStatsForGivenDay(dates[i]);
-    //   console.log('stats', dates[i], stats);
-    // }
+    const dates = getDatesInQuarter(curQuarter, curYear);
+    
+    pageViews = 0;
+    uniquePageViews = 0; 
+    visitors = 0;
+
+    for (let i = 0; i < dates.length; ++i) {
+      let stats = await getStatsForGivenDay(dates[i]);
+      pageViews += stats.pageViews;
+      uniquePageViews += stats.uniquePageViews;
+      visitors += stats.visitors;
+    }
+
+    quaterlyInfo.push([curYear, curQuarter, pageViews, uniquePageViews, visitors])
   }
 
+  console.log('quarterlyInfo', quaterlyInfo);
   
 }
 
-cycleThroughQuarters('Q1-2019', 'Q1-2023');
+cycleThroughQuarters('Q1-2019', 'Q2-2019');
 
 
 
