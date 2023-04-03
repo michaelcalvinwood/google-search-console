@@ -61,7 +61,9 @@ const analyticsQueryG3 = async (startDate, endDate) => {
 
   let test = JSON.stringify(result.data, null, 4);
 
-  console.log(test);
+  //console.log(test);
+
+  return result.data.rows[0];
 
 }
 
@@ -151,10 +153,19 @@ const sendPageViewG3 = async (url, title, propertyId = 'UA-11167465-10') => {
 
 const cycleThroughDays = async (first, last) => {
   let curDate = null;
+  let result;
+  const info = {}
+
   while (curDate !== last) {
     if (curDate === null) curDate = first;
     else curDate = DateTime.fromISO(curDate).plus({days: 1}).toISODate();
-    console.log(curDate);
+
+    result = await analyticsQueryG3(curDate, curDate);
+    info.pageViews = result[0];
+    info.uniquePageViews = result[1];
+    info.visitors = result[2];
+
+    console.log(curDate, info);
   }
 }
 
@@ -171,4 +182,4 @@ const cycleThroughDays = async (first, last) => {
 //sendPageViewG3('https://dev.pymnts.com/today-on-pymnts/', 'Today on Pymnts', 'UA-11167465-10');
 //analyticsQueryG3('2023-03-01', 'today');
 
-cycleThroughDays ('2021-02-01', '2021-03-03');
+cycleThroughDays ('2019-01-01', '2019-01-07');
