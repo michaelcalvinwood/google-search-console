@@ -8,6 +8,9 @@ const axios = require('axios');
 const { v4: uuidv4, v4 } = require('uuid');
 const { DateTime } = require("luxon");
 
+const { convertArrayToCSV } = require('convert-array-to-csv');
+const converter = require('convert-array-to-csv');
+
 //console.log(keys);
 
 // Search Console API
@@ -357,7 +360,10 @@ const cycleThroughQuarters = async (startQuarter, lastQuarter) => {
   }
 
   console.log('quarterlyInfo', quaterlyInfo);
+
+  const csv = convertArrayToCSV(quaterlyInfo);
   
+  console.log('csv', csv);
 }
 
 cycleThroughQuarters('Q1-2019', 'Q2-2019');
