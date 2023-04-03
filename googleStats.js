@@ -20,6 +20,28 @@ const request = {
 const client = new JWT(request);
 google.options({auth: client});
 
+// Setup MYSQL
+
+const mysql = require('mysql2');
+
+const pool = mysql.createPool({
+    connectionLimit : 100, //important
+    host     : process.env.MYSQL_HOST,
+    user     : process.env.MYSQL_USER,
+    password : process.env.MYSQL_PASSWORD,
+    database : process.env.MYSQL_DATABASE,
+    debug    :  false
+});
+
+pool.query("SHOW DATABASES",(err, data) => {
+    if(err) {
+        console.error(err);
+        return;
+    }
+    // rows fetch
+    console.log(data);
+});
+
 // Check to see which properties are accessible with these credentials
 
 const searchConsoleQuery = async () => {
@@ -182,4 +204,4 @@ const cycleThroughDays = async (first, last) => {
 //sendPageViewG3('https://dev.pymnts.com/today-on-pymnts/', 'Today on Pymnts', 'UA-11167465-10');
 //analyticsQueryG3('2023-03-01', 'today');
 
-cycleThroughDays ('2019-01-01', '2019-01-07');
+//cycleThroughDays ('2019-01-01', '2019-01-07');

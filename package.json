@@ -14,6 +14,7 @@
     "google-auth-library": "^8.7.0",
     "googleapis": "^110.0.0",
     "luxon": "^3.3.0",
+    "mysql2": "^3.2.0",
     "node-rake": "^1.0.1",
     "uuid": "^9.0.0"
   }
