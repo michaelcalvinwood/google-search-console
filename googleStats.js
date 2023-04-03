@@ -224,6 +224,31 @@ const cycleThroughDays = async (first, last) => {
   }
 }
 
+const getDatesInQuarter = (quarter, year) => {
+  let startDate, endDate;
+
+  switch (quarter) {
+    case 'Q1':
+      startDate = `${year}-01-01`;
+      endDate = `${year}-03-31`;
+      break;
+    case 'Q2':
+      startDate = `${year}-04-01`;
+      endDate = `${year}-06-30`;
+      break;
+    case 'Q3':
+      startDate = `${year}-07-01`;
+      endDate = `${year}-09-30`;
+      break;
+    case 'Q4':
+      startDate = `${year}-10-01`;
+      endDate = `${year}-12-31`;
+      break;
+  }
+
+  console.log('start/stop', startDate, endDate);
+}
+
 /*
  * Example quarter: 'Q1-2019'
  */
@@ -258,6 +283,7 @@ const cycleThroughQuarters = (startQuarter, lastQuarter) => {
     }
 
     console.log('cur', curYear, curQuarter)
+    getDatesInQuarter(curQuarter, curYear);
   }
   
 }
