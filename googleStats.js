@@ -68,6 +68,20 @@ const insertG3Stats = async (info) => {
   return result;
 }
 
+const getStatsForGivenDay = async day => {
+  const query = `SELECT page_views, unique_page_views, visitors FROM g3_stats WHERE date = '${day}'`;
+  const result = await mysqlQuery(query);
+  if (!result.length) return false;
+
+  const stats = {
+    pageViews: result[0]['page_views'],
+    uniquePageViews: result[0]['unique_page_views'],
+    visitors: result[0]['visitors']
+  }
+  
+  return stats;
+}
+
 // Check to see which properties are accessible with these credentials
 
 const searchConsoleQuery = async () => {
@@ -257,16 +271,16 @@ const getDatesInQuarter = (quarter, year) => {
       break;
   }
 
-  console.log('start/stop', startDate, endDate);
   const dates = getEveryDayBetweenTwoDates(startDate, endDate);
-  console.log(dates);
-  
+
+  return dates;
+
 }
 
 /*
  * Example quarter: 'Q1-2019'
  */
-const cycleThroughQuarters = (startQuarter, lastQuarter) => {
+const cycleThroughQuarters = async (startQuarter, lastQuarter) => {
   let curQuarter = null;
   let curYear = null;
   let finalQuarter = lastQuarter.split('-')[0];
@@ -297,12 +311,19 @@ const cycleThroughQuarters = (startQuarter, lastQuarter) => {
     }
 
     console.log('cur', curYear, curQuarter)
-    getDatesInQuarter(curQuarter, curYear);
+    const dates = getDatesInQuarter(curQuarter, curYear);
+    for (let i = 0; i < dates.length; ++i) {
+      let stats = await getStatsForGivenDay(dates[i]);
+      console.log('stats', dates[i], stats);
+    }
   }
+
   
 }
 
-cycleThroughQuarters('Q1-2019', 'Q1-2023');
+cycleThroughQuarters('Q1-2019', 'Q1-2019');
+
+
 
 
 // G4 Analytics Query
